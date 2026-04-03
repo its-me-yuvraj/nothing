@@ -4,29 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>nothing.</title>
-
-  <!-- ═══════════════════════════════════════════════════════════
-       SETUP INSTRUCTIONS (read before deploying)
-       ═══════════════════════════════════════════════════════════
-
-    1. Go to https://firebase.google.com and click "Get started"
-    2. Create a new project (any name, e.g. "nothing-button")
-    3. In your project console → Build → Realtime Database → Create database
-       Choose "Start in test mode" (allows public reads + writes — perfect for this)
-    4. Copy your config: Project Settings (⚙️) → Your apps → Add app (</>) → Register
-       Paste the firebaseConfig values below, replacing the placeholder strings.
-    5. Push this file to GitHub and enable GitHub Pages in repo Settings → Pages.
-       That's it. Your shared counter is live.
-
-    ⚠️  Test mode rules expire after 30 days. To keep it public forever, set
-        Realtime Database rules to:
-        { "rules": { ".read": true, ".write": true } }
-  ═══════════════════════════════════════════════════════════════ -->
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -60,8 +40,6 @@
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
-
-    /* ── title ── */
     h1 {
       font-size: clamp(0.85rem, 2vw, 1.1rem);
       font-weight: 400;
@@ -70,16 +48,13 @@
       color: var(--muted);
       margin-bottom: clamp(3rem, 8vh, 5rem);
     }
-
-    /* ── button wrapper (handles ripple overflow) ── */
     .btn-wrap {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-
-    /* ── the button ── */
+    
     #the-button {
       width: clamp(180px, 38vmin, 300px);
       height: clamp(180px, 38vmin, 300px);
@@ -120,8 +95,7 @@
         0 6px 20px rgba(0,0,0,0.14),
         0 2px 8px rgba(0,0,0,0.10);
     }
-
-    /* ── ripple ── */
+    
     .ripple {
       position: absolute;
       border-radius: 50%;
@@ -138,7 +112,6 @@
       100% { transform: scale(2.2); opacity: 0; }
     }
 
-    /* ── counter ── */
     .counter-wrap {
       margin-top: clamp(2.5rem, 7vh, 4rem);
       display: flex;
@@ -169,12 +142,10 @@
       text-transform: uppercase;
     }
 
-    /* ── loading state ── */
     #counter.loading {
       opacity: 0.25;
     }
 
-    /* ── footer ── */
     footer {
       position: fixed;
       bottom: 1.5rem;
@@ -199,23 +170,21 @@
 
   <footer>click it.</footer>
 
-  <!-- Firebase SDK (module) -->
   <script type="module">
     import { initializeApp }            from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getDatabase, ref,
              runTransaction, onValue }  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-    /* ── ✏️  PASTE YOUR FIREBASE CONFIG HERE ── */
     const firebaseConfig = {
-      apiKey:            "YOUR_API_KEY",
-      authDomain:        "YOUR_PROJECT.firebaseapp.com",
-      databaseURL:       "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-      projectId:         "YOUR_PROJECT",
-      storageBucket:     "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId:             "YOUR_APP_ID"
+      apiKey: "AIzaSyC-lTmQRZD1uspo-GhULSkQ12KTRhVidLo",
+      authDomain: "nothing-7b688.firebaseapp.com",
+      databaseURL: "https://nothing-7b688-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "nothing-7b688",
+      storageBucket: "nothing-7b688.firebasestorage.app",
+      messagingSenderId: "57438567067",
+      appId: "1:57438567067:web:eba66615edc165eeaae43e",
+      measurementId: "G-BLX1QE8M7D"
     };
-    /* ──────────────────────────────────────── */
 
     const app      = initializeApp(firebaseConfig);
     const db       = getDatabase(app);
@@ -225,14 +194,12 @@
     const btnWrap  = document.getElementById('btn-wrap');
     const counter  = document.getElementById('counter');
 
-    /* ── real-time listener: updates counter for everyone live ── */
     onValue(countRef, (snapshot) => {
       const val = snapshot.val() ?? 0;
       counter.textContent = val.toLocaleString();
       counter.classList.remove('loading');
     });
 
-    /* ── Web Audio click sound ── */
     function playClick() {
       try {
         const ctx      = new (window.AudioContext || window.webkitAudioContext)();
@@ -242,9 +209,9 @@
 
         for (let i = 0; i < data.length; i++) {
           const t     = i / data.length;
-          const env   = Math.pow(1 - t, 6);           // sharp decay
+          const env   = Math.pow(1 - t, 6);           
           const noise = (Math.random() * 2 - 1) * env;
-          const tone  = Math.sin(2 * Math.PI * 200 * t) * env * 0.4; // low thud
+          const tone  = Math.sin(2 * Math.PI * 200 * t) * env * 0.4;
           data[i]     = noise * 0.6 + tone;
         }
 
@@ -259,11 +226,9 @@
         src.start();
         src.onended = () => ctx.close();
       } catch (e) {
-        // audio blocked — no problem
       }
     }
 
-    /* ── ripple effect ── */
     function spawnRipple() {
       const r = document.createElement('span');
       r.className = 'ripple';
@@ -271,15 +236,13 @@
       r.addEventListener('animationend', () => r.remove());
     }
 
-    /* ── counter bounce ── */
     function bumpCounter() {
       counter.classList.remove('bump');
-      void counter.offsetWidth; // reflow trick to restart animation
+      void counter.offsetWidth; 
       counter.classList.add('bump');
       counter.addEventListener('transitionend', () => counter.classList.remove('bump'), { once: true });
     }
 
-    /* ── click handler ── */
     let clicking = false;
 
     btn.addEventListener('click', () => {
@@ -294,7 +257,6 @@
       btn.classList.add('pressed');
       setTimeout(() => btn.classList.remove('pressed'), 120);
 
-      // Atomically increment the counter in Firebase
       runTransaction(countRef, (current) => (current ?? 0) + 1);
     });
   </script>
